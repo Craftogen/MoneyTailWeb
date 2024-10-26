@@ -348,7 +348,6 @@ function load_prefs() {
         .readText()
         .then((content) => {
             prefs = JSON.parse(content);
-            load_workbooks();
         })
         .catch((err) => {
             console.log(`Unable to load prefs - ${err.message}`);
@@ -2105,7 +2104,7 @@ window.onload = () => {
     function main_worker_message_handler(e) {
         switch (e.data[0]) {
             case constants.MSG_INIT:
-                load_prefs();
+                load_workbooks();
                 break;
 
             case constants.MSG_WORKBOOKS:
@@ -2247,6 +2246,8 @@ window.onload = () => {
             return;
         }
 
+        load_prefs();
+
         mainWorker.addEventListener(
             "message",
             main_worker_message_handler);
@@ -2265,7 +2266,7 @@ window.onload = () => {
     if (cordova.platformId == "browser") {
         window.addEventListener('filePluginIsReady', () => { main(); }, false);
     } else {
-        main();
+        window.setTimeout(main, 1000);
     }
 
     document.addEventListener(
