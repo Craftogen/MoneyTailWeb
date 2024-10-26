@@ -1,7 +1,7 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "display_override": "standalone",
+  "display-override": "standalone",
   "name": "MoneyTail",
   "short_name": "MoneyTail",
   "version": "1.0.4",
