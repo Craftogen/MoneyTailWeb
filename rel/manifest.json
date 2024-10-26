@@ -1,0 +1,11 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "MoneyTail",
+  "short_name": "MoneyTail",
+  "version": "com.craftogen.moneytail",
+  "description": "Double-entry personal workbook",
+  "author": "Craftogen",
+  "icons": [],
+  "start_url": "index.html"
+}
