@@ -1,6 +1,7 @@
 {
   "background_color": "#FFF",
-  "display": "fullscreen",
+  "display": "standalone",
+  "display_override": "standalone",
   "name": "MoneyTail",
   "short_name": "MoneyTail",
   "version": "1.0.4",
@@ -14,5 +15,5 @@
     { "src": "./img/icon-512-maskable.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
   ],
   "start_url": "index.html",
-  "id": "/MoneyTailWeb/rel/index.html"
+  "id": "/MoneyTailWeb/index.html"
 }
