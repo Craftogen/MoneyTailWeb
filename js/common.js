@@ -15,3 +15,8 @@ export function worksheet_id_from_transaction_id(id) {
     // <workbook>_<worksheet>
     return `${ids[0]}${UNIFIED_ID_SEP}${ids[1]}`;
 }
+
+export function textToArrayBuffer(text) {
+    const encoder = new TextEncoder();
+    return encoder.encode(text).buffer;
+}

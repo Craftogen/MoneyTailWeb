@@ -1,9 +1,14 @@
 import * as constants from "./constants.js";
+import * as common from "./common.js";
 
 export const SOME_ID = "as1";
 export const APP_EXT = "as2";
 export const DIR_IN_CURRENT_DIR = "as3";
 export const EXPORT = "as4";
+
+const DB_NAME = "main";
+const STORE_NAME = "files";
+const INDEX_NAME = "path";
 
 export default class AppStorage {
     constructor(type, name = null, dirName = constants.CURRENT_DIR) {
@@ -82,34 +87,40 @@ export default class AppStorage {
             });
     }
 
-    #writeTextBrowser(text, resolve, reject) {
-        window.requestFileSystem(
-            LocalFileSystem.PERSISTENT,
-            {},
-            (fs) => {
-                fs.root.getDirectory(
-                    this.dirName,
-                    { create: this.#canCreateDir() },
-                    (dirEntry) => {
-                        dirEntry.getFile(
-                            this.fileName,
-                            { create: true },
-                            (fileEntry) => {
-                                this.#writeTextToFileEntry(
-                                    fileEntry, text, resolve, reject);
-                            },
-                            (error) => {
-                                reject(error);
-                            });
+    #insertTextBrowser(db, text, resolve, reject) {
+        const tx = db.transaction([STORE_NAME], "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        store.put({dir: this.dirName, file: this.fileName, text: text});
+        tx.oncomplete = () => { resolve(); };
+        tx.onerror = (error) => {
+            reject(new FileError(FileError.QUOTA_EXCEEDED_ERR));
+        };
+    }
 
-                    },
-                    (error) => {
-                        reject(error);
-                    });
-            },
-            (error) => {
-                reject(error);
-            });
+    #writeTextBrowser(text, resolve, reject) {
+        let openRequest = window.indexedDB.open(DB_NAME, 1);
+        openRequest.onsuccess = (event) => {
+            const db = event.target.result;
+            this.#insertTextBrowser(
+                db, text, resolve, reject);
+        };
+        openRequest.onerror = () => {
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        };
+        openRequest.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            const objectStore = db.createObjectStore(
+                STORE_NAME,
+                { keyPath: ["dir", "file"], autoIncrement: false });
+            objectStore.createIndex(
+                INDEX_NAME,
+                ["dir", "file"],
+                { unique: true, multiEntry: false });
+
+            objectStore.transaction.oncomplete = () => {
+                this.#insertTextBrowser(db, text, resolve, reject);
+            }
+        }
     }
 
     #writeTextOthers(text, resolve, reject) {
@@ -185,37 +196,14 @@ export default class AppStorage {
     }
 
     #readAsArrayBufferBrowser(resolve, reject) {
-        window.requestFileSystem(
-            LocalFileSystem.PERSISTENT,
-            {},
-            (fs) => {
-                fs.root.getDirectory(
-                    this.dirName,
-                    { create: false },
-                    (dirEntry) => {
-                        dirEntry.getFile(
-                            this.fileName,
-                            {},
-                            (fileEntry) => {
-                                this.#readAsArrayBufferFromFileEntry(
-                                    fileEntry, resolve, reject);
-                            },
-                            (err) => {
-                                if (err instanceof DOMException &&
-                                        err.name == "NotFoundError") {
-                                    reject(new FileError(FileError.NOT_FOUND_ERR));
-                                } else {
-                                    reject(err);
-                                }
-                            });
-                    },
-                    (error) => {
-                        reject(error);
-                    });
+        this.#readTextBrowser(
+            (text) => {
+                resolve(common.textToArrayBuffer(text));
             },
             (error) => {
                 reject(error);
-            });
+            }
+        )
     }
 
     #readAsArrayBufferOthers(resolve, reject) {
@@ -270,37 +258,26 @@ export default class AppStorage {
     }
 
     #readTextBrowser(resolve, reject) {
-        window.requestFileSystem(
-            LocalFileSystem.PERSISTENT,
-            {},
-            (fs) => {
-                fs.root.getDirectory(
-                    this.dirName,
-                    { create: false },
-                    (dirEntry) => {
-                        dirEntry.getFile(
-                            this.fileName,
-                            {},
-                            (fileEntry) => {
-                                this.#readTextFromFileEntry(
-                                    fileEntry, resolve, reject);
-                            },
-                            (err) => {
-                                if (err instanceof DOMException &&
-                                        err.name == "NotFoundError") {
-                                    reject(new FileError(FileError.NOT_FOUND_ERR));
-                                } else {
-                                    reject(err);
-                                }
-                            });
-                    },
-                    (error) => {
-                        reject(error);
-                    });
-            },
-            (error) => {
-                reject(error);
-            });
+        let openRequest = window.indexedDB.open(DB_NAME, 1);
+        openRequest.onsuccess = (event) => {
+            const db = event.target.result;
+            const tx = db.transaction([STORE_NAME], "readonly");
+            const store = tx.objectStore(STORE_NAME);
+            const request = store.get([this.dirName, this.fileName]);
+            request.onsuccess = (event) => {
+                resolve(event.target.result.text);
+            };
+            request.onerror = () => {
+                reject(new FileError(FileError.NOT_FOUND_ERR));
+            }
+        };
+        openRequest.onerror = () => {
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        };
+        openRequest.onupgradeneeded = (event) => {
+            event.target.transaction.abort();  // Do not create new database
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        }
     }
 
     #readTextOthers(resolve, reject) {
@@ -348,31 +325,26 @@ export default class AppStorage {
     }
 
     #deleteFileBrowser(resolve, reject) {
-        window.requestFileSystem(
-            LocalFileSystem.PERSISTENT,
-            {},
-            (fs) => {
-                fs.root.getDirectory(
-                    this.dirName,
-                    { create: false },
-                    (dirEntry) => {
-                        dirEntry.getFile(
-                            this.fileName,
-                            { create: false },
-                            (fileEntry) => {
-                                this.#deleteFileEntry(fileEntry, resolve, reject);
-                            },
-                            (error) => {
-                                reject(error);
-                            });
-                    },
-                    (error) => {
-                        reject(error);
-                    });
-            },
-            (error) => {
-                reject(error);
-            });
+        let openRequest = window.indexedDB.open(DB_NAME, 1);
+        openRequest.onsuccess = (event) => {
+            const db = event.target.result;
+            const tx = db.transaction([STORE_NAME], "readwrite");
+            const store = tx.objectStore(STORE_NAME);
+            const req = store.delete([this.dirName, this.fileName]);
+            req.onsuccess = () => {
+                resolve();
+            };
+            req.onerror = () => {
+                reject(new FileError(FileError.NOT_FOUND_ERR));
+            };
+        };
+        openRequest.onerror = () => {
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        };
+        openRequest.onupgradeneeded = (event) => {
+            event.target.transaction.abort();  // Do not create new database
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        }
     }
 
     #deleteFileOthers(resolve, reject) {
@@ -413,23 +385,35 @@ export default class AppStorage {
     }
 
     #deleteDirRecursiveBrowser(resolve, reject) {
-        window.requestFileSystem(
-            LocalFileSystem.PERSISTENT,
-            {},
-            (fs) => {
-                fs.root.getDirectory(
-                    this.dirName,
-                    { create: false },
-                    (dirEntry) => {
-                        dirEntry.removeRecursively(resolve, reject);
-                    },
-                    (error) => {
-                        reject(error);
-                    });
-            },
-            (error) => {
-                reject(error);
-            });
+        let openRequest = window.indexedDB.open(DB_NAME, 1);
+        openRequest.onsuccess = (event) => {
+            const range = IDBKeyRange.bound(
+                [this.dirName], [this.dirName, []]);
+            const db = event.target.result;
+            const tx = db.transaction([STORE_NAME], "readwrite");
+            const store = tx.objectStore(STORE_NAME);
+            const req = store.index(INDEX_NAME).openCursor(range);
+            req.onsuccess = (event) => {
+                const cursor = event.target.result;
+                if (cursor) {
+                    cursor.delete();
+                    cursor.continue();
+                }
+            };
+            req.onerror = () => {
+                reject(new FileError(FileError.NOT_FOUND_ERR));
+            };
+            tx.oncomplete = () => {
+                resolve();
+            };
+        };
+        openRequest.onerror = () => {
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        };
+        openRequest.onupgradeneeded = (event) => {
+            event.target.transaction.abort();  // Do not create new database
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        }
     }
 
     #deleteDirRecursiveOthers(resolve, reject) {
@@ -488,24 +472,39 @@ export default class AppStorage {
     }
 
     #listFilesBrowser(resolve, reject, fileCallback, doneCallback) {
-        window.requestFileSystem(
-            LocalFileSystem.PERSISTENT,
-            {},
-            (fs) => {
-                fs.root.getDirectory(
-                    this.dirName,
-                    { create: false },
-                    (dirEntry) => {
-                        var reader = dirEntry.createReader();
-                        this.#listFileEntries(reader, resolve, reject, fileCallback, doneCallback);
-                    },
-                    (error) => {
-                        reject(error);
-                    });
-            },
-            (error) => {
-                reject(error);
-            });
+        let openRequest = window.indexedDB.open(DB_NAME, 1);
+        openRequest.onsuccess = (event) => {
+            const range = IDBKeyRange.bound(
+                [this.dirName], [this.dirName, []]);
+            const db = event.target.result;
+            const tx = db.transaction([STORE_NAME], "readonly");
+            const store = tx.objectStore(STORE_NAME);
+            const req = store.index(INDEX_NAME).openCursor(range);
+            req.onsuccess = (event) => {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const content = common.textToArrayBuffer(cursor.value.text);
+                    const f = new Blob(
+                        [content],
+                        { type: "application/octet-stream" });
+                    fileCallback(f);
+                    cursor.continue();
+                }
+            };
+            req.onerror = () => {
+                reject(new FileError(FileError.NOT_FOUND_ERR));
+            };
+            tx.oncomplete = () => {
+                doneCallback();
+            };
+        };
+        openRequest.onerror = () => {
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        };
+        openRequest.onupgradeneeded = (event) => {
+            event.target.transaction.abort();  // Do not create new database
+            reject(new FileError(FileError.NOT_FOUND_ERR));
+        }
     }
 
     #listFilesOthers(resolve, reject, fileCallback, doneCallback) {

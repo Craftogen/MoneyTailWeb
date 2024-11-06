@@ -350,7 +350,7 @@ function load_prefs() {
             prefs = JSON.parse(content);
         })
         .catch((err) => {
-            console.log(`Unable to load prefs - ${err.message}`);
+            console.log(`Unable to load prefs - ${errMsg(err)}`);
         })
 }
 
@@ -502,6 +502,16 @@ function pasteIf(allowedFlags) {
     }
 
     mainWorker.postMessage([msgId, fromUnifiedId, toUnifiedId, prefs]);
+}
+
+function errMsg(err) {
+    let msg = null;
+    if (err.message) {
+        msg = `${err.message} (${err.code})`;
+    } else {
+        msg = `Error code: ${err.code}`;
+    }
+    return msg;
 }
 
 window.onload = () => {
