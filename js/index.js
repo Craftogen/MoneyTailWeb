@@ -2273,7 +2273,11 @@ window.onload = () => {
             });
     }
 
-    if (cordova.platformId == "browser") {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    if (cordova.platformId == "browser" && 
+            (userAgent.includes("chrome") ||
+            userAgent.includes("crios") ||
+            userAgent.includes("chromium"))) {
         window.addEventListener('filePluginIsReady', () => { main(); }, false);
     } else {
         window.setTimeout(main, 1000);
