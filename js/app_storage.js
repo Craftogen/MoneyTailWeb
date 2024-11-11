@@ -276,7 +276,7 @@ export default class AppStorage {
         };
         openRequest.onupgradeneeded = (event) => {
             event.target.transaction.abort();  // Do not create new database
-            reject(new FileError(FileError.NOT_FOUND_ERR));
+            // abort() causes onerror to be called
         }
     }
 
@@ -343,7 +343,7 @@ export default class AppStorage {
         };
         openRequest.onupgradeneeded = (event) => {
             event.target.transaction.abort();  // Do not create new database
-            reject(new FileError(FileError.NOT_FOUND_ERR));
+            // abort() causes onerror to be called
         }
     }
 
@@ -412,7 +412,7 @@ export default class AppStorage {
         };
         openRequest.onupgradeneeded = (event) => {
             event.target.transaction.abort();  // Do not create new database
-            reject(new FileError(FileError.NOT_FOUND_ERR));
+            // abort() causes onerror to be called
         }
     }
 
@@ -503,7 +503,7 @@ export default class AppStorage {
         };
         openRequest.onupgradeneeded = (event) => {
             event.target.transaction.abort();  // Do not create new database
-            reject(new FileError(FileError.NOT_FOUND_ERR));
+            // abort() causes onerror to be called
         }
     }
 

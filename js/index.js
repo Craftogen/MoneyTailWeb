@@ -757,6 +757,41 @@ window.onload = () => {
             sort_wb(SortBy.Amount, de("wb_col_pending_sort"));
         });
 
+    function handleWBContextMenu(event, wb_id) {
+        event.preventDefault();
+
+        let row = event.target.parentElement;
+        let menu = de("wb_context_menu");
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
+            wb_id;
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
+            row.cells[0].innerText;
+
+        enableContextMenuItem(
+            de("wb_context_paste"),
+            testPaste(ENTRY_FLAG.WORKSHEETS));
+
+        show_context_menu(menu, event);
+
+        event.stopPropagation();
+    }
+
+    function handleWBClick(event, wb_id) {
+        let row = event.target.parentElement;
+
+        de("ws_wb_name").innerText =
+            `Workbooks > ${row.cells[0].textContent}`;
+        de("ws_list").innerHTML = "";
+
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
+            wb_id;
+
+        mainWorker.postMessage([
+            constants.MSG_WORKSHEETS, wb_id, prefs]);
+
+        make_active("ws_subpanel", "wb_subpanel");
+    }
+
     function populate_wb_list(data) {
         let data_obj = JSON.parse(data);
 
@@ -765,6 +800,7 @@ window.onload = () => {
             tableHTML += `<tr id="${data_obj[i][0]}" class="main">`
             tableHTML += `<td class="main">${data_obj[i][1]}</td>`;
             tableHTML += `<td class="main amount">${fmt_amt(data_obj[i][2])}</td>`
+            tableHTML += `<td class="main contextMenu">&#x2807</td>`;
             tableHTML += `</tr>`;
         }
         de("wb_list").innerHTML = tableHTML;
@@ -773,41 +809,28 @@ window.onload = () => {
             let wb_id = data_obj[i][0];
             let wb_row = de(wb_id);
 
-            wb_row.addEventListener(
+            wb_row.cells[0].addEventListener(
                 "click",
                 (event) => {
-                    let row = event.target.parentElement;
+                    handleWBClick(event, wb_id);
+                });
 
-                    de("ws_wb_name").innerText =
-                        `Workbooks > ${row.cells[0].textContent}`;
-                    de("ws_list").innerHTML = "";
+            wb_row.cells[1].addEventListener(
+                "click",
+                (event) => {
+                    handleWBClick(event, wb_id);
+                });
 
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
-                        wb_id;
-
-                    mainWorker.postMessage([
-                        constants.MSG_WORKSHEETS, wb_id, prefs]);
-
-                    make_active("ws_subpanel", "wb_subpanel");
+            wb_row.cells[2].addEventListener(
+                "click",
+                (event)  => {
+                    handleWBContextMenu(event, wb_id);
                 });
 
             wb_row.addEventListener(
                 "contextmenu",
                 (event)  => {
-                    event.preventDefault();
-
-                    let row = event.target.parentElement;
-                    let menu = de("wb_context_menu");
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
-                        wb_id;
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
-                        row.cells[0].innerText;
-
-                    enableContextMenuItem(
-                        de("wb_context_paste"),
-                        testPaste(ENTRY_FLAG.WORKSHEETS));
-
-                    show_context_menu(menu, event);
+                    handleWBContextMenu(event, wb_id);
                 });
         }
     }
@@ -919,6 +942,45 @@ window.onload = () => {
             sort_ws(SortBy.Amount, de("ws_col_pending_sort"));
         });
 
+    function handleWSClick(event, unified_ws_id) {
+        let row = event.target.parentElement;
+        let ws_name = row.cells[0].textContent;
+        let wb_name = de("ws_wb_name").textContent;
+
+        de("ws_txn_name").innerText = `${wb_name} > ${ws_name}`;
+        de("ws_txn_list").innerHTML = "";
+        de("ws_txn_pending").textContent = row.cells[1].textContent;
+
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
+            unified_ws_id;
+
+        mainWorker.postMessage([
+            constants.MSG_WS_TRANSACTIONS, unified_ws_id, prefs]);
+
+        make_active("ws_txn_subpanel", "ws_subpanel");
+    }
+
+    function handleWSContextMenu(event, unified_ws_id) {
+        event.preventDefault();
+
+        let row = event.target.parentElement;
+        let menu = de("ws_context_menu");
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
+            unified_ws_id;
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
+            row.cells[0].innerText;
+
+        enableContextMenuItem(
+            de("ws_context_paste"),
+            testPaste(
+                ENTRY_FLAG.WORKSHEETS |
+                ENTRY_FLAG.SECTIONS));
+
+        show_context_menu(menu, event);
+
+        event.stopPropagation();
+    }
+
     function populate_ws_list(data) {
         let data_obj = JSON.parse(data);
 
@@ -931,6 +993,7 @@ window.onload = () => {
             tableHTML += `<tr id="${unified_ws_id}" class="main">`
             tableHTML += `<td class="main">${ws_name}</td>`;
             tableHTML += `<td class="main amount">${amt_disp}</td>`
+            tableHTML += `<td class="main contextMenu">&#x2807</td>`;
             tableHTML += `</tr>`;
         }
         de("ws_list").innerHTML = tableHTML;
@@ -939,59 +1002,51 @@ window.onload = () => {
             let unified_ws_id = data_obj[i][0];
             let ws_row = de(unified_ws_id);
 
-            ws_row.addEventListener(
+            ws_row.cells[0].addEventListener(
                 "click",
                 (event) => {
-                    let row = event.target.parentElement;
-                    let ws_name = row.cells[0].textContent;
-                    let wb_name = de("ws_wb_name").textContent;
+                    handleWSClick(event, unified_ws_id);
+                });
 
-                    de("ws_txn_name").innerText = `${wb_name} > ${ws_name}`;
-                    de("ws_txn_list").innerHTML = "";
-                    de("ws_txn_pending").textContent = row.cells[1].textContent;
+            ws_row.cells[1].addEventListener(
+                "click",
+                (event) => {
+                    handleWSClick(event, unified_ws_id);
+                });
 
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
-                        unified_ws_id;
-
-                    mainWorker.postMessage([
-                        constants.MSG_WS_TRANSACTIONS, unified_ws_id, prefs]);
-
-                    make_active("ws_txn_subpanel", "ws_subpanel");
+            ws_row.cells[2].addEventListener(
+                "click",
+                (event) => {
+                    handleWSContextMenu(event, unified_ws_id);
                 });
 
             ws_row.addEventListener(
                 "contextmenu",
                 (event)  => {
-                    event.preventDefault();
-
-                    let row = event.target.parentElement;
-                    let menu = de("ws_context_menu");
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
-                        unified_ws_id;
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
-                        row.cells[0].innerText;
-
-                    enableContextMenuItem(
-                        de("ws_context_paste"),
-                        testPaste(
-                            ENTRY_FLAG.WORKSHEETS |
-                            ENTRY_FLAG.SECTIONS));
-
-                    show_context_menu(menu, event);
-
-                    event.stopPropagation();
+                    handleWSContextMenu(event, unified_ws_id);
                 });
         }
+    }
+
+    function handleWsContextPaste(event) {
+        event.preventDefault();
+        enableContextMenuItem(
+            de("ws_panel_context_paste"),
+            testPaste(ENTRY_FLAG.WORKSHEETS));
+        show_context_menu(de("ws_panel_context_menu"), event);
+        event.stopPropagation();
     }
 
     de("ws_subpanel").addEventListener(
         "contextmenu",
         (event) => {
-            event.preventDefault();
-            enableContextMenuItem(
-                de("ws_panel_context_paste"),
-                testPaste(ENTRY_FLAG.WORKSHEETS));
-            show_context_menu(de("ws_panel_context_menu"), event);
+            handleWsContextPaste(event);
+        });
+
+    de("ws_col_ctx").addEventListener(
+        "click",
+        (event) => {
+            handleWsContextPaste(event);
         });
 
     de("ws_subpanel").addEventListener(
@@ -1366,6 +1421,54 @@ window.onload = () => {
             sort_ws_txn(SortBy.Amount, de("ws_txn_col_amt_sort"));
         });
 
+    function handleWsSecContextMenu(event, sec_id) {
+        event.preventDefault();
+
+        let row = event.target.parentElement;
+        let menu = de("sec_context_menu");
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
+            sec_id;
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
+            row.cells[0].textContent
+
+        enableContextMenuItem(
+            de("sec_context_paste"),
+            testPaste(
+                ENTRY_FLAG.SECTIONS |
+                ENTRY_FLAG.TRANSACTIONS));
+
+        show_context_menu(menu, event);
+
+        event.stopPropagation();
+    }
+
+    function handleWsTxnClick(event, unified_t_id) {
+        mainWorker.postMessage([
+            constants.MSG_START_EDIT_TRANSACTION,
+            unified_t_id]);
+    }
+
+    function handleWsTxnContextMenu(event, unified_t_id) {
+        event.preventDefault();
+
+        let row = event.target.parentElement;
+        let menu = de("txn_context_menu");
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
+            unified_t_id;
+        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
+            row.cells[1].textContent;
+
+        enableContextMenuItem(
+            de("txn_context_paste"),
+            testPaste(
+                ENTRY_FLAG.SECTIONS |
+                ENTRY_FLAG.TRANSACTIONS));
+
+        show_context_menu(menu, event);
+
+        event.stopPropagation();
+    }
+
     function populate_ws_txn_list(data) {
         let data_obj = JSON.parse(data);
         let section_obj = data_obj["sections"];
@@ -1384,7 +1487,9 @@ window.onload = () => {
 
             tableHTML += `<tr id=${sec_id} class="main section">`;
             tableHTML += `<td colspan="4" class="main">${sec_name}</td>`;
-            tableHTML += `<td class="main amount">${sec_total}</td></tr>`;
+            tableHTML += `<td class="main amount">${sec_total}</td>`;
+            tableHTML += `<td class="main contextMenu">&#x2807</td>`;
+            tableHTML += `</tr>`;
 
             new_ws_txn_add_sec_select(sec_id, sec_name);
 
@@ -1397,6 +1502,7 @@ window.onload = () => {
                 tableHTML += `<td class="main" colspan="2">${txn_obj[3]} to `;
                 tableHTML += `${txn_obj[4]}</td>`;
                 tableHTML += `<td class="main amount squeeze">${fmt_amt(txn_obj[5])}</td>`
+                tableHTML += `<td class="main contextMenu">&#x2807</td>`;
                 tableHTML += `</tr>`;
             }
         }
@@ -1412,70 +1518,61 @@ window.onload = () => {
             sec_row.addEventListener(
                 "contextmenu",
                 (event) => {
-                    event.preventDefault();
+                    handleWsSecContextMenu(event, sec_id);
+                });
 
-                    let row = event.target.parentElement;
-                    let menu = de("sec_context_menu");
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
-                        sec_id;
-                    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
-                        row.cells[0].textContent
-
-                    enableContextMenuItem(
-                        de("sec_context_paste"),
-                        testPaste(
-                            ENTRY_FLAG.SECTIONS |
-                            ENTRY_FLAG.TRANSACTIONS));
-
-                    show_context_menu(menu, event);
-
-                    event.stopPropagation();
+            sec_row.cells[2].addEventListener(
+                "click",
+                () => {
+                    handleWsSecContextMenu(event, sec_id);
                 });
 
             for (let i = 0; i < section_obj[section_i][3].length; i++) {
                 let unified_t_id = section_obj[section_i][3][i][0];
                 let ws_txn_row = de(unified_t_id);
-                ws_txn_row.addEventListener(
+
+                for (let i = 0; i < 4; i++) {
+                    ws_txn_row.cells[i].addEventListener(
+                        "click",
+                        (event) => {
+                            handleWsTxnClick(event, unified_t_id);
+                        });
+                }
+
+                ws_txn_row.cells[4].addEventListener(
                     "click",
-                    () => {
-                        mainWorker.postMessage([
-                            constants.MSG_START_EDIT_TRANSACTION,
-                            unified_t_id]);
+                    (event) => {
+                        handleWsTxnContextMenu(event, unified_t_id);
                     });
+
                 ws_txn_row.addEventListener(
                     "contextmenu",
                     (event) => {
-                        event.preventDefault();
-
-                        let row = event.target.parentElement;
-                        let menu = de("txn_context_menu");
-                        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] =
-                            unified_t_id;
-                        state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] =
-                            row.cells[1].textContent;
-
-                        enableContextMenuItem(
-                            de("txn_context_paste"),
-                            testPaste(
-                                ENTRY_FLAG.SECTIONS |
-                                ENTRY_FLAG.TRANSACTIONS));
-
-                        show_context_menu(menu, event);
-
-                        event.stopPropagation();
+                        handleWsTxnContextMenu(event, unified_t_id);
                     });
             }
         }
     }
 
+    function handleWsTxnContextPaste(event) {
+        event.preventDefault();
+        enableContextMenuItem(
+            de("txn_panel_context_paste"),
+            testPaste(ENTRY_FLAG.SECTIONS));
+        show_context_menu(de("txn_panel_context_menu"), event);
+        event.stopPropagation();
+    }
+
+    de("ws_txn_col_ctx").addEventListener(
+        "click",
+        (event) => {
+            handleWsTxnContextPaste(event);
+        });
+
     de("ws_txn_subpanel").addEventListener(
         "contextmenu",
         (event) => {
-            event.preventDefault();
-            enableContextMenuItem(
-                de("txn_panel_context_paste"),
-                testPaste(ENTRY_FLAG.SECTIONS));
-            show_context_menu(de("txn_panel_context_menu"), event);
+            handleWsTxnContextPaste(event);
         });
 
     de("ws_txn_subpanel").addEventListener(

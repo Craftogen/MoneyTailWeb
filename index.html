@@ -31,12 +31,14 @@
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover, maximum-scale=1">
         <meta name="color-scheme" content="light dark">
         <link rel="stylesheet" href="css/index.css">
         <link rel="manifest" href="manifest.json">
         <link rel="icon" href="favicon.ico" sizes="any">
         <link rel="apple-touch-icon" href="./img/apple-touch-icon.png">
+        <meta name="mobile-web-app-capable" content="yes"></meta>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <title>Money Tail</title>
     </head>
     <body>
@@ -46,8 +48,7 @@
                     <div id="wb_subpanel" class="tabs_subpanel">
                         <table class="topBar"><tr>
                             <td class="topBarItem topBarLarge">Workbooks</td>
-                            <td class="topBarAppName">MoneyTail</td>
-                        </table>
+                        </tr></table>
                         <table class="main">
                             <thead class="main" id="wb_list_head">
                                 <tr class="main">
@@ -59,11 +60,13 @@
                                         <span>Pending</span><br />
                                         <span id="wb_col_pending_sort" class="sort"></span>
                                     </td>
+                                    <td class="main_sort head squeeze"></td>
                                 </tr>
                             </thead>
                             <tbody id="wb_list">
                                 <tr>
                                     <td class="main">(Loading...)</td>
+                                    <td class="main"></td>
                                     <td class="main"></td>
                                 </tr>
                             </tbody>
@@ -93,11 +96,13 @@
                                         <span>Pending</span><br />
                                         <span id="ws_col_pending_sort" class="sort"></span>
                                     </td>
+                                    <td class="main head squeeze contextMenu" id="ws_col_ctx">&#x2807</td>
                                 </tr>
                             </thead>
                             <tbody id="ws_list">
                                 <tr>
                                     <td class="main">(Loading...)</td>
+                                    <td class="main"></td>
                                     <td class="main"></td>
                                 </tr>
                             </tbody>
@@ -143,6 +148,7 @@
                                         <span>Amt.</span><br />
                                         <span id="ws_txn_col_amt_sort" class="sort"></span>
                                     </td>
+                                    <td class="main head squeeze contextMenu" id="ws_txn_col_ctx">&#x2807</td>
                                 </tr>
                             </thead>
                             <tbody id="ws_txn_list">
@@ -155,8 +161,7 @@
                     <div id="acc_subpanel" class="tabs_subpanel">
                         <table class="topBar"><tr>
                             <td class="topBarItem topBarLarge">Accounts</td>
-                            <td class="topBarAppName">MoneyTail</td>
-                        </table>
+                        </tr></table>
                         <table class="main">
                             <thead class="main" id="acc_list_head">
                                 <tr class="main">
@@ -181,12 +186,11 @@
                         <button class="floatingBottomBtn" id="new_acc_btn">New account</button>
                     </div>
                 </div>
-                <div id="reports_panel" class="inactive">
+                <div id="reports_panel" class="tabs_panel inactive">
                     <table class="topBar"><tr>
                         <td class="topBarItem topBarLarge">Reports</td>
-                        <td class="topBarAppName">MoneyTail</td>
-                    </table>
-                    <table class="main fit_height">
+                    </tr></table>
+                    <table class="main">
                         <tr class="content_height">
                             <td class="main">
                                 <select class="main" id="report_type_sel">
@@ -207,12 +211,10 @@
                                 <button class="icon headItem download_svg" id="save_report" disabled></button>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="report_frame" colspan="5">
-                                <iframe class="main" id="report_content"></iframe>
-                            </td>
-                        </tr>
                     </table>
+                    <div class="report_frame">
+                        <iframe class="main" id="report_content"></iframe>
+                    </div>
                 </div>
                 <table class="bottomBar"><tr>
                     <td class="bottomBarItem active" id="ws_tab">Workbooks</td>
@@ -221,7 +223,7 @@
                     <td class="bottomBarItem" id="more_menu">More...</td>
                 </tr></table>
             </div>
-            <div id="new_wb_page" class="inactive">
+            <div id="new_wb_page" class="page inactive">
                 <table class="topBar"><tr>
                     <td class="topBarItem back">
                         <button class="topBarItem icon back_svg" id="new_wb_back"></button>
@@ -236,7 +238,7 @@
                     <tr><td class="main"><input type="text" id="wb_name" maxlength="64" /></td></tr>
                 </table>
             </div>
-            <div id="new_ws_page" class="inactive">
+            <div id="new_ws_page" class="page inactive">
                 <table class="topBar">
                     <tr>
                         <td class="topBarItem back" rowspan="2">
@@ -256,7 +258,7 @@
                     <tr><td class="main"><input type="text" id="ws_name" maxlength="64" /></td></tr>
                 </table>
             </div>
-            <div id="new_acc_page" class="inactive">
+            <div id="new_acc_page" class="page inactive">
                 <table class="topBar"><tr>
                     <td class="topBarItem back">
                         <button class="topBarItem icon back_svg" id="new_acc_back"></button>
@@ -271,7 +273,7 @@
                     <tr><td class="main"><input type="text" id="acc_name" maxlength="64" /></td></tr>
                 </table>
             </div>
-            <div id="new_ws_txn_page" class="inactive">
+            <div id="new_ws_txn_page" class="page inactive">
                 <table class="topBar">
                     <tr>
                         <td class="topBarItem back" rowspan="2">
@@ -290,7 +292,7 @@
                     <tr>
                         <td class="label">Section:</td>
                         <td class="main"><select id="txn_sec"></select></td>
-                        <td class="main"><button id="new_sec_btn">New section</button>
+                        <td class="main"><button id="new_sec_btn">New</button>
                     </tr>
                     <tr>
                         <td class="label">Date:</td>
@@ -303,7 +305,7 @@
                     <tr>
                         <td class="label">Transfer from:</td>
                         <td class="main"><select id="txn_from"></select></td>
-                        <td class="main squeeze" rowspan="2"><button class="fontSymbol" id="new_ws_txn_swap_ac_btn">&#x21C5;</button>
+                        <td class="main squeeze" rowspan="2"><button class="fontSymbol" id="new_ws_txn_swap_ac_btn">&#x21C5;</button></td>
                     </tr>
                     <tr>
                         <td class="label">Transfer to:</td>
@@ -315,7 +317,7 @@
                     </tr>
                 </table>
             </div>
-            <div id="new_sec_page" class="inactive">
+            <div id="new_sec_page" class="page inactive">
                 <table class="topBar">
                     <tr>
                         <td class="topBarItem back" rowspan="2">
@@ -335,7 +337,7 @@
                     <tr><td class="main"><input type="text" id="sec_name" maxlength="64" /></td></tr>
                 </table>
             </div>
-            <div id="settle_report_settings_page" class="inactive">
+            <div id="settle_report_settings_page" class="page inactive">
                 <table class="topBar">
                     <tr>
                         <td class="topBarItem back" rowspan="2">
@@ -357,7 +359,7 @@
                     </td></tr>
                 </table>
             </div>
-            <div id="ac_txn_report_settings_page" class="inactive">
+            <div id="ac_txn_report_settings_page" class="page inactive">
                 <table class="topBar">
                     <tr>
                         <td class="topBarItem back" rowspan="2">
