@@ -42,6 +42,8 @@ body {
     width:100%;
     overscroll-behavior: none;
     display: flex;
+    position: fixed;
+    height: 100%;
 }
 
 /* Portrait layout (default) */
@@ -64,11 +66,6 @@ body {
 table.main {
     width: 100%;
     border-collapse: collapse;
-}
-
-table.fit_height {
-    flex-grow: 1;
-    display: flex;
 }
 
 tr.content_height {
@@ -123,6 +120,11 @@ td.label {
     width: 7em;
 }
 
+td.label {
+    padding: 0px 8px 0px 8px;
+    width: 7em;
+}
+
 td.middle {
     vertical-align: middle;
 }
@@ -147,6 +149,8 @@ td.date_head {
 table.bottomBar {
     background-color: white;
     border-collapse: collapse;
+    position: sticky;
+    bottom: 0px;
 }
 
 button.floatingBottomBtn {
@@ -277,6 +281,8 @@ table.topBar {
     width: 100%;
     background-color: white;
     height: 4em;
+    position: sticky;
+    top: 0px;
 }
 
 td.topBarItem {
@@ -396,8 +402,14 @@ span.tag {
 div.page {
     display: flex;
     flex-grow: 1;
-    flex-direction: column;
     background-color: #f2f2f2;
+}
+
+div.pageContent {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 div.tabs_panel {
@@ -408,7 +420,6 @@ div.tabs_panel {
 
 div.tabs_subpanel {
     height: 100%;
-    overflow-y: auto;
 }
 
 @media screen and (prefers-color-scheme: dark) {

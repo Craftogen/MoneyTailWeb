@@ -44,342 +44,358 @@
     <body>
         <div class="app">
             <div id="tabs_page" class="page">
-                <div id="ws_panel" class="tabs_panel">
-                    <div id="wb_subpanel" class="tabs_subpanel">
+                <div class="pageContent">
+                    <div id="ws_panel" class="tabs_panel">
+                        <div id="wb_subpanel" class="tabs_subpanel">
+                            <table class="topBar"><tr>
+                                <td class="topBarItem topBarLarge">Workbooks</td>
+                            </tr></table>
+                            <table class="main">
+                                <thead class="main" id="wb_list_head">
+                                    <tr class="main">
+                                        <td class="main_sort head" id="wb_col_name">
+                                            <span>Workbook name</span><br />
+                                            <span id="wb_col_name_sort" class="sort sort_asc"></span>
+                                        </td>
+                                        <td class="main_sort head amount_head squeeze" id="wb_col_pending">
+                                            <span>Pending</span><br />
+                                            <span id="wb_col_pending_sort" class="sort"></span>
+                                        </td>
+                                        <td class="main_sort head squeeze"></td>
+                                    </tr>
+                                </thead>
+                                <tbody id="wb_list">
+                                    <tr>
+                                        <td class="main">(Loading...)</td>
+                                        <td class="main"></td>
+                                        <td class="main"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button class="floatingBottomBtn" id="new_wb_btn">New workbook</button>
+                        </div>
+                        <div id="ws_subpanel" class="tabs_subpanel inactive">
+                            <table class="topBar">
+                                <tr>
+                                    <td class="topBarItem back" rowspan="2">
+                                        <button class="topBarItem icon back_svg" id="ws_back"></button>
+                                    </td>
+                                    <td class="topBarItem">Worksheets</td>
+                                </tr>
+                                <tr>
+                                    <td class="topBarItem breadCrumb" id="ws_wb_name"></td>
+                                </tr>
+                            </table>
+                            <table class="main">
+                                <thead class="main" id="ws_list_head">
+                                    <tr class="main">
+                                        <td class="main_sort head" id="ws_col_name">
+                                            <span>Name</span><br />
+                                            <span id="ws_col_name_sort" class="sort sort_asc"></span>
+                                        </td>
+                                        <td class="main_sort head amount_head squeeze" id="ws_col_pending">
+                                            <span>Pending</span><br />
+                                            <span id="ws_col_pending_sort" class="sort"></span>
+                                        </td>
+                                        <td class="main head squeeze contextMenu" id="ws_col_ctx">&#x2807</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="ws_list">
+                                    <tr>
+                                        <td class="main">(Loading...)</td>
+                                        <td class="main"></td>
+                                        <td class="main"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button class="floatingBottomBtn" id="new_ws_btn">New worksheet</button>
+                        </div>
+                        <div id="ws_txn_subpanel" class="tabs_subpanel inactive">
+                            <table class="topBar">
+                                <tr>
+                                    <td class="topBarItem back" rowspan="2">
+                                        <button class="topBarItem icon back_svg" id="ws_txn_back"></button>
+                                    </td>
+                                    <td class="topBarItem">Transactions</td>
+                                    <td class="topBarItem small right_text">
+                                        Pending:
+                                    </td>
+                                    <td class="topBarItem right_text amount" id="ws_txn_pending"></td>
+                                </tr>
+                                <tr>
+                                    <td class="topBarItem breadCrumb" id="ws_txn_name" colspan="3"></td>
+                                </tr>
+                            </table>
+                            <table class="main">
+                                <thead class="main" id="ws_txn_list_head">
+                                    <tr class="main">
+                                        <td class="main_sort head date_head" id="ws_txn_col_date">
+                                            <span>Date</span><br />
+                                            <span id="ws_txn_col_date_sort" class="sort sort_asc"></span>
+                                        </td>
+                                        <td class="main_sort head" id="ws_txn_col_desc">
+                                            <span>Desc.</span><br />
+                                            <span id="ws_txn_col_desc_sort" class="sort"></span>
+                                        </td>
+                                        <td class="main_sort head squeeze" id="ws_txn_col_xfer_from">
+                                            <span>From</span><br />
+                                            <span id="ws_txn_col_xfer_from_sort" class="sort"></span>
+                                        </td>
+                                        <td class="main_sort head squeeze" id="ws_txn_col_xfer_to">
+                                            <span>To</span><br />
+                                            <span id="ws_txn_col_xfer_to_sort" class="sort"></span>
+                                        </td>
+                                        <td class="main_sort head amount_head squeeze" id="ws_txn_col_amt">
+                                            <span>Amt.</span><br />
+                                            <span id="ws_txn_col_amt_sort" class="sort"></span>
+                                        </td>
+                                        <td class="main head squeeze contextMenu" id="ws_txn_col_ctx">&#x2807</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="ws_txn_list">
+                                </tbody>
+                            </table>
+                            <button class="floatingBottomBtn" id="new_txn_btn">New transaction</button>
+                        </div>
+                    </div>
+                    <div id="acc_panel" class="tabs_panel inactive">
+                        <div id="acc_subpanel" class="tabs_subpanel">
+                            <table class="topBar"><tr>
+                                <td class="topBarItem topBarLarge">Accounts</td>
+                            </tr></table>
+                            <table class="main">
+                                <thead class="main" id="acc_list_head">
+                                    <tr class="main">
+                                        <td class="main_sort head" id="acc_col_name">
+                                            <span>Name</span><br />
+                                            <span id="acc_col_name_sort" class="sort sort_asc"></span>
+                                        </td>
+                                        <td class="main_sort head amount_head squeeze" id="acc_col_tot">
+                                            <span>Total</span><br />
+                                            <span id="acc_col_tot_sort" class="sort"></span>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody id="acc_list">
+                                    <tr>
+                                        <td></td>
+                                        <td class="main">(Loading...)</td>
+                                        <td class="main"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button class="floatingBottomBtn" id="new_acc_btn">New account</button>
+                        </div>
+                    </div>
+                    <div id="reports_panel" class="tabs_panel inactive">
                         <table class="topBar"><tr>
-                            <td class="topBarItem topBarLarge">Workbooks</td>
+                            <td class="topBarItem topBarLarge">Reports</td>
                         </tr></table>
                         <table class="main">
-                            <thead class="main" id="wb_list_head">
-                                <tr class="main">
-                                    <td class="main_sort head" id="wb_col_name">
-                                        <span>Workbook name</span><br />
-                                        <span id="wb_col_name_sort" class="sort sort_asc"></span>
-                                    </td>
-                                    <td class="main_sort head amount_head squeeze" id="wb_col_pending">
-                                        <span>Pending</span><br />
-                                        <span id="wb_col_pending_sort" class="sort"></span>
-                                    </td>
-                                    <td class="main_sort head squeeze"></td>
-                                </tr>
-                            </thead>
-                            <tbody id="wb_list">
-                                <tr>
-                                    <td class="main">(Loading...)</td>
-                                    <td class="main"></td>
-                                    <td class="main"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button class="floatingBottomBtn" id="new_wb_btn">New workbook</button>
-                    </div>
-                    <div id="ws_subpanel" class="tabs_subpanel inactive">
-                        <table class="topBar">
-                            <tr>
-                                <td class="topBarItem back" rowspan="2">
-                                    <button class="topBarItem icon back_svg" id="ws_back"></button>
+                            <tr class="content_height">
+                                <td class="main">
+                                    <select class="main" id="report_type_sel">
+                                        <option id="settle_report">Transfer to settle report</option>
+                                        <option id="acc_txn_report">Account transaction report</option>
+                                    </select>
                                 </td>
-                                <td class="topBarItem">Worksheets</td>
-                            </tr>
-                            <tr>
-                                <td class="topBarItem breadCrumb" id="ws_wb_name"></td>
-                            </tr>
-                        </table>
-                        <table class="main">
-                            <thead class="main" id="ws_list_head">
-                                <tr class="main">
-                                    <td class="main_sort head" id="ws_col_name">
-                                        <span>Name</span><br />
-                                        <span id="ws_col_name_sort" class="sort sort_asc"></span>
-                                    </td>
-                                    <td class="main_sort head amount_head squeeze" id="ws_col_pending">
-                                        <span>Pending</span><br />
-                                        <span id="ws_col_pending_sort" class="sort"></span>
-                                    </td>
-                                    <td class="main head squeeze contextMenu" id="ws_col_ctx">&#x2807</td>
-                                </tr>
-                            </thead>
-                            <tbody id="ws_list">
-                                <tr>
-                                    <td class="main">(Loading...)</td>
-                                    <td class="main"></td>
-                                    <td class="main"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button class="floatingBottomBtn" id="new_ws_btn">New worksheet</button>
-                    </div>
-                    <div id="ws_txn_subpanel" class="tabs_subpanel inactive">
-                        <table class="topBar">
-                            <tr>
-                                <td class="topBarItem back" rowspan="2">
-                                    <button class="topBarItem icon back_svg" id="ws_txn_back"></button>
+                                <td class="main middle">
+                                    <span id="report_state"></span>
                                 </td>
-                                <td class="topBarItem">Transactions</td>
-                                <td class="topBarItem small right_text">
-                                    Pending:
+                                <td class="main right">
+                                    <button class="icon headItem refresh_svg" id="refresh_report"></button>
                                 </td>
-                                <td class="topBarItem right_text amount" id="ws_txn_pending"></td>
+                                <td class="main right">
+                                    <button class="icon headItem settings_svg" id="report_settings"></button>
+                                </td>
+                                <td class="main right">
+                                    <button class="icon headItem download_svg" id="save_report" disabled></button>
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="topBarItem breadCrumb" id="ws_txn_name" colspan="3"></td>
-                            </tr>
                         </table>
-                        <table class="main">
-                            <thead class="main" id="ws_txn_list_head">
-                                <tr class="main">
-                                    <td class="main_sort head date_head" id="ws_txn_col_date">
-                                        <span>Date</span><br />
-                                        <span id="ws_txn_col_date_sort" class="sort sort_asc"></span>
-                                    </td>
-                                    <td class="main_sort head" id="ws_txn_col_desc">
-                                        <span>Desc.</span><br />
-                                        <span id="ws_txn_col_desc_sort" class="sort"></span>
-                                    </td>
-                                    <td class="main_sort head squeeze" id="ws_txn_col_xfer_from">
-                                        <span>From</span><br />
-                                        <span id="ws_txn_col_xfer_from_sort" class="sort"></span>
-                                    </td>
-                                    <td class="main_sort head squeeze" id="ws_txn_col_xfer_to">
-                                        <span>To</span><br />
-                                        <span id="ws_txn_col_xfer_to_sort" class="sort"></span>
-                                    </td>
-                                    <td class="main_sort head amount_head squeeze" id="ws_txn_col_amt">
-                                        <span>Amt.</span><br />
-                                        <span id="ws_txn_col_amt_sort" class="sort"></span>
-                                    </td>
-                                    <td class="main head squeeze contextMenu" id="ws_txn_col_ctx">&#x2807</td>
-                                </tr>
-                            </thead>
-                            <tbody id="ws_txn_list">
-                            </tbody>
-                        </table>
-                        <button class="floatingBottomBtn" id="new_txn_btn">New transaction</button>
+                        <div class="report_frame">
+                            <iframe class="main" id="report_content"></iframe>
+                        </div>
                     </div>
-                </div>
-                <div id="acc_panel" class="tabs_panel inactive">
-                    <div id="acc_subpanel" class="tabs_subpanel">
-                        <table class="topBar"><tr>
-                            <td class="topBarItem topBarLarge">Accounts</td>
-                        </tr></table>
-                        <table class="main">
-                            <thead class="main" id="acc_list_head">
-                                <tr class="main">
-                                    <td class="main_sort head" id="acc_col_name">
-                                        <span>Name</span><br />
-                                        <span id="acc_col_name_sort" class="sort sort_asc"></span>
-                                    </td>
-                                    <td class="main_sort head amount_head squeeze" id="acc_col_tot">
-                                        <span>Total</span><br />
-                                        <span id="acc_col_tot_sort" class="sort"></span>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody id="acc_list">
-                                <tr>
-                                    <td></td>
-                                    <td class="main">(Loading...)</td>
-                                    <td class="main"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button class="floatingBottomBtn" id="new_acc_btn">New account</button>
-                    </div>
-                </div>
-                <div id="reports_panel" class="tabs_panel inactive">
-                    <table class="topBar"><tr>
-                        <td class="topBarItem topBarLarge">Reports</td>
+                    <table class="bottomBar"><tr>
+                        <td class="bottomBarItem active" id="ws_tab">Workbooks</td>
+                        <td class="bottomBarItem" id="acc_tab">Accounts</td>
+                        <td class="bottomBarItem" id="reports_tab">Reports</td>
+                        <td class="bottomBarItem" id="more_menu">More...</td>
                     </tr></table>
-                    <table class="main">
-                        <tr class="content_height">
-                            <td class="main">
-                                <select class="main" id="report_type_sel">
-                                    <option id="settle_report">Transfer to settle report</option>
-                                    <option id="acc_txn_report">Account transaction report</option>
-                                </select>
-                            </td>
-                            <td class="main middle">
-                                <span id="report_state"></span>
-                            </td>
-                            <td class="main right">
-                                <button class="icon headItem refresh_svg" id="refresh_report"></button>
-                            </td>
-                            <td class="main right">
-                                <button class="icon headItem settings_svg" id="report_settings"></button>
-                            </td>
-                            <td class="main right">
-                                <button class="icon headItem download_svg" id="save_report" disabled></button>
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="report_frame">
-                        <iframe class="main" id="report_content"></iframe>
-                    </div>
                 </div>
-                <table class="bottomBar"><tr>
-                    <td class="bottomBarItem active" id="ws_tab">Workbooks</td>
-                    <td class="bottomBarItem" id="acc_tab">Accounts</td>
-                    <td class="bottomBarItem" id="reports_tab">Reports</td>
-                    <td class="bottomBarItem" id="more_menu">More...</td>
-                </tr></table>
             </div>
             <div id="new_wb_page" class="page inactive">
-                <table class="topBar"><tr>
-                    <td class="topBarItem back">
-                        <button class="topBarItem icon back_svg" id="new_wb_back"></button>
-                    </td>
-                    <td class="topBarItem" id="new_wb_title">New Workbook</td>
-                    <td class="topBarItem right_most">
-                        <button class="topBarItem icon tick_svg" id="new_wb_save" disabled></button>
-                    </td>
-                </tr></table>
-                <table class="main">
-                    <tr><td class="main_label">Name:</td></tr>
-                    <tr><td class="main"><input type="text" id="wb_name" maxlength="64" /></td></tr>
-                </table>
+                <div class="pageContent">
+                    <table class="topBar"><tr>
+                        <td class="topBarItem back">
+                            <button class="topBarItem icon back_svg" id="new_wb_back"></button>
+                        </td>
+                        <td class="topBarItem" id="new_wb_title">New Workbook</td>
+                        <td class="topBarItem right_most">
+                            <button class="topBarItem icon tick_svg" id="new_wb_save" disabled></button>
+                        </td>
+                    </tr></table>
+                    <table class="main">
+                        <tr><td class="main_label">Name:</td></tr>
+                        <tr><td class="main"><input type="text" id="wb_name" maxlength="64" /></td></tr>
+                    </table>
+                </div>
             </div>
             <div id="new_ws_page" class="page inactive">
-                <table class="topBar">
-                    <tr>
-                        <td class="topBarItem back" rowspan="2">
-                            <button class="topBarItem icon back_svg" id="new_ws_back"></button>
-                        </td>
-                        <td class="topBarItem" id="new_ws_title">New worksheet</td>
-                        <td class="topBarItem right_most" rowspan="2">
-                            <button class="topBarItem icon tick_svg" id="new_ws_save" disabled></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="topBarItem breadCrumb" id="new_ws_bread_crumb"></td>
-                    </tr>
-                </table>
-                <table class="main">
-                    <tr><td class="main_label">Name:</td></tr>
-                    <tr><td class="main"><input type="text" id="ws_name" maxlength="64" /></td></tr>
-                </table>
+                <div class="pageContent">
+                    <table class="topBar">
+                        <tr>
+                            <td class="topBarItem back" rowspan="2">
+                                <button class="topBarItem icon back_svg" id="new_ws_back"></button>
+                            </td>
+                            <td class="topBarItem" id="new_ws_title">New worksheet</td>
+                            <td class="topBarItem right_most" rowspan="2">
+                                <button class="topBarItem icon tick_svg" id="new_ws_save" disabled></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="topBarItem breadCrumb" id="new_ws_bread_crumb"></td>
+                        </tr>
+                    </table>
+                    <table class="main">
+                        <tr><td class="main_label">Name:</td></tr>
+                        <tr><td class="main"><input type="text" id="ws_name" maxlength="64" /></td></tr>
+                    </table>
+                </div>
             </div>
             <div id="new_acc_page" class="page inactive">
-                <table class="topBar"><tr>
-                    <td class="topBarItem back">
-                        <button class="topBarItem icon back_svg" id="new_acc_back"></button>
-                    </td>
-                    <td class="topBarItem" id="new_acc_title">New Account</td>
-                    <td class="topBarItem right_most">
-                        <button class="topBarItem icon tick_svg" id="new_acc_save" disabled></button>
-                    </td>
-                </tr></table>
-                <table class="main">
-                    <tr><td class="main_label">Name:</td></tr>
-                    <tr><td class="main"><input type="text" id="acc_name" maxlength="64" /></td></tr>
-                </table>
+                <div class="pageContent">
+                    <table class="topBar"><tr>
+                        <td class="topBarItem back">
+                            <button class="topBarItem icon back_svg" id="new_acc_back"></button>
+                        </td>
+                        <td class="topBarItem" id="new_acc_title">New Account</td>
+                        <td class="topBarItem right_most">
+                            <button class="topBarItem icon tick_svg" id="new_acc_save" disabled></button>
+                        </td>
+                    </tr></table>
+                    <table class="main">
+                        <tr><td class="main_label">Name:</td></tr>
+                        <tr><td class="main"><input type="text" id="acc_name" maxlength="64" /></td></tr>
+                    </table>
+                </div>
             </div>
             <div id="new_ws_txn_page" class="page inactive">
-                <table class="topBar">
-                    <tr>
-                        <td class="topBarItem back" rowspan="2">
-                            <button class="topBarItem icon back_svg" id="new_ws_txn_back"></button>
-                        </td>
-                        <td class="topBarItem" id="new_ws_txn_title">New transaction</td>
-                        <td class="topBarItem right_most" rowspan="2">
-                            <button class="topBarItem icon tick_svg" id="new_ws_txn_save" disabled></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="topBarItem breadCrumb" id="new_ws_txn_bread_crumb"></td>
-                    </tr>
-                </table>
-                <table class="main">
-                    <tr>
-                        <td class="label">Section:</td>
-                        <td class="main"><select id="txn_sec"></select></td>
-                        <td class="main"><button id="new_sec_btn">New</button>
-                    </tr>
-                    <tr>
-                        <td class="label">Date:</td>
-                        <td class="main" colspan="2"><input type="date" class="date" id="txn_date" /></td>
-                    </tr>
-                    <tr>
-                        <td class="label">Description:</td>
-                        <td class="main" colspan="2"><input type="text" id="txn_desc" maxlength="64" /></td>
-                    </tr>
-                    <tr>
-                        <td class="label">Transfer from:</td>
-                        <td class="main"><select id="txn_from"></select></td>
-                        <td class="main squeeze" rowspan="2"><button class="fontSymbol" id="new_ws_txn_swap_ac_btn">&#x21C5;</button></td>
-                    </tr>
-                    <tr>
-                        <td class="label">Transfer to:</td>
-                        <td class="main"><select id="txn_to"></select></td>
-                    </tr>
-                    <tr>
-                        <td class="label">Amount:</td>
-                        <td class="main" colspan="2"><input type="text" class="amount" id="txn_amt" maxlength="16" /></td>
-                    </tr>
-                </table>
+                <div class="pageContent">
+                    <table class="topBar">
+                        <tr>
+                            <td class="topBarItem back" rowspan="2">
+                                <button class="topBarItem icon back_svg" id="new_ws_txn_back"></button>
+                            </td>
+                            <td class="topBarItem" id="new_ws_txn_title">New transaction</td>
+                            <td class="topBarItem right_most" rowspan="2">
+                                <button class="topBarItem icon tick_svg" id="new_ws_txn_save" disabled></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="topBarItem breadCrumb" id="new_ws_txn_bread_crumb"></td>
+                        </tr>
+                    </table>
+                    <table class="main">
+                        <tr>
+                            <td class="label">Section:</td>
+                            <td class="main"><select id="txn_sec"></select></td>
+                            <td class="main"><button id="new_sec_btn">New</button>
+                        </tr>
+                        <tr>
+                            <td class="label">Date:</td>
+                            <td class="main" colspan="2"><input type="date" class="date" id="txn_date" /></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Description:</td>
+                            <td class="main" colspan="2"><input type="text" id="txn_desc" maxlength="64" /></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Transfer from:</td>
+                            <td class="main"><select id="txn_from"></select></td>
+                            <td class="main" rowspan="2"><button class="fontSymbol" id="new_ws_txn_swap_ac_btn">&#x21C5;</button></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Transfer to:</td>
+                            <td class="main"><select id="txn_to"></select></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Amount:</td>
+                            <td class="main" colspan="2"><input type="text" class="amount" id="txn_amt" maxlength="16" /></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <div id="new_sec_page" class="page inactive">
-                <table class="topBar">
-                    <tr>
-                        <td class="topBarItem back" rowspan="2">
-                            <button class="topBarItem icon back_svg" id="new_sec_back"></button>
-                        </td>
-                        <td class="topBarItem" id="new_sec_title">New section</td>
-                        <td class="topBarItem right_most" rowspan="2">
-                            <button class="topBarItem icon tick_svg" id="new_sec_save" disabled></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="topBarItem breadCrumb" id="new_sec_bread_crumb"></td>
-                    </tr>
-                </table>
-                <table class="main">
-                    <tr><td class="main_label">Name:</td></tr>
-                    <tr><td class="main"><input type="text" id="sec_name" maxlength="64" /></td></tr>
-                </table>
+                <div class="pageContent">
+                    <table class="topBar">
+                        <tr>
+                            <td class="topBarItem back" rowspan="2">
+                                <button class="topBarItem icon back_svg" id="new_sec_back"></button>
+                            </td>
+                            <td class="topBarItem" id="new_sec_title">New section</td>
+                            <td class="topBarItem right_most" rowspan="2">
+                                <button class="topBarItem icon tick_svg" id="new_sec_save" disabled></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="topBarItem breadCrumb" id="new_sec_bread_crumb"></td>
+                        </tr>
+                    </table>
+                    <table class="main">
+                        <tr><td class="main_label">Name:</td></tr>
+                        <tr><td class="main"><input type="text" id="sec_name" maxlength="64" /></td></tr>
+                    </table>
+                </div>
             </div>
             <div id="settle_report_settings_page" class="page inactive">
-                <table class="topBar">
-                    <tr>
-                        <td class="topBarItem back" rowspan="2">
-                            <button class="topBarItem icon back_svg" id="settle_report_settings_back"></button>
-                        </td>
-                        <td class="topBarItem">Report settings</td>
-                        <td class="topBarItem right_most" rowspan="2">
-                            <button class="topBarItem icon tick_svg" id="settle_report_settings_save"></button>
-                        </td>
+                <div class="pageContent">
+                    <table class="topBar">
                         <tr>
-                            <td class="topBarItem breadCrumb">Transfer to settle report</td>
+                            <td class="topBarItem back" rowspan="2">
+                                <button class="topBarItem icon back_svg" id="settle_report_settings_back"></button>
+                            </td>
+                            <td class="topBarItem">Report settings</td>
+                            <td class="topBarItem right_most" rowspan="2">
+                                <button class="topBarItem icon tick_svg" id="settle_report_settings_save"></button>
+                            </td>
+                            <tr>
+                                <td class="topBarItem breadCrumb">Transfer to settle report</td>
+                            </tr>
                         </tr>
-                    </tr>
-                </table>
-                <table class="main">
-                    <tr><td class="main_label">Exclude workbooks:</td></tr>
-                    <tr><td class="main">
-                        <div id="settle_report_exclude_wbs" class="multi_select" />
-                    </td></tr>
-                </table>
+                    </table>
+                    <table class="main">
+                        <tr><td class="main_label">Exclude workbooks:</td></tr>
+                        <tr><td class="main">
+                            <div id="settle_report_exclude_wbs" class="multi_select" />
+                        </td></tr>
+                    </table>
+                </div>
             </div>
             <div id="ac_txn_report_settings_page" class="page inactive">
-                <table class="topBar">
-                    <tr>
-                        <td class="topBarItem back" rowspan="2">
-                            <button class="topBarItem icon back_svg" id="ac_txn_report_settings_back"></button>
-                        </td>
-                        <td class="topBarItem">Report settings</td>
-                        <td class="topBarItem right_most" rowspan="2">
-                            <button class="topBarItem icon tick_svg" id="ac_txn_report_settings_save"></button>
-                        </td>
+                <div class="pageContent">
+                    <table class="topBar">
                         <tr>
-                            <td class="topBarItem breadCrumb">Account transaction report</td>
+                            <td class="topBarItem back" rowspan="2">
+                                <button class="topBarItem icon back_svg" id="ac_txn_report_settings_back"></button>
+                            </td>
+                            <td class="topBarItem">Report settings</td>
+                            <td class="topBarItem right_most" rowspan="2">
+                                <button class="topBarItem icon tick_svg" id="ac_txn_report_settings_save"></button>
+                            </td>
+                            <tr>
+                                <td class="topBarItem breadCrumb">Account transaction report</td>
+                            </tr>
                         </tr>
-                    </tr>
-                </table>
-                <table class="main">
-                    <tr><td class="main">Exclude workbooks:</td></tr>
-                    <tr><td class="main">
-                        <div id="ac_txn_report_exclude_wbs" class="multi_select" />
-                    </td></tr>
-                </table>
+                    </table>
+                    <table class="main">
+                        <tr><td class="main">Exclude workbooks:</td></tr>
+                        <tr><td class="main">
+                            <div id="ac_txn_report_exclude_wbs" class="multi_select" />
+                        </td></tr>
+                    </table>
+                </div>
             </div>
             <div class="contextMenu hidden" id="wb_context_menu">
                 <div class="contextMenuItem" id="wb_context_edit">Rename...</div>
