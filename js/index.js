@@ -290,7 +290,7 @@ function update_sort_icon() {
     elems = document.getElementsByClassName("sort_asc");
     Array.from(elems).forEach((e) => {
         e.innerHTML =
-            `<svg width="48" height="48" version="1.1" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">` +
+            `<svg width="48" height="48" version="1.1" viewBox="0 0 12.7 12.7" fill="none" xmlns="http://www.w3.org/2000/svg">` +
             `<path d="m6.35 3.7042 5.2917 5.2917"/>` +
             `<path d="m6.35 3.7042-5.2917 5.2917"/>` +
             `</svg>`;
@@ -299,7 +299,7 @@ function update_sort_icon() {
     elems = document.getElementsByClassName("sort_dsc");
     Array.from(elems).forEach((e) => {
         e.innerHTML =
-            `<svg width="48" height="48" version="1.1" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">` +
+            `<svg width="48" height="48" version="1.1" viewBox="0 0 12.7 12.7" fill="none" xmlns="http://www.w3.org/2000/svg">` +
             `<path d="m6.35 8.9958-5.2917-5.2917"/>` +
             `<path d="m6.35 8.9958 5.2917-5.2917"/>` +
             `</svg>`;
@@ -526,7 +526,7 @@ window.onload = () => {
     Array.from(elems).forEach((e) => {
         let cls = e.disabled ? "disabled" : "";
         e.innerHTML =
-            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">` +
+            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" fill="none" xmlns="http://www.w3.org/2000/svg">` +
             `<path d="m0.77302 6.4234h11.159" />` +
             `<path d="m0.77742 6.3619 5.2143-5.2143" />` +
             `<path d="m0.77751 6.4607 5.2143 5.2143" />` +
@@ -537,7 +537,7 @@ window.onload = () => {
     Array.from(elems).forEach((e) => {
         let cls = e.disabled ? "disabled" : "";
         e.innerHTML =
-            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">` +
+            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" fill="none" xmlns="http://www.w3.org/2000/svg">` +
             `<path d="m0.79375 6.35 2.1552 5.5563 8.9573-11.063"/>` +
             `</svg>`;
     });
@@ -546,7 +546,7 @@ window.onload = () => {
     Array.from(elems).forEach((e) => {
         let cls = e.disabled ? "disabled" : "";
         e.innerHTML =
-            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">` +
+            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" fill="none" xmlns="http://www.w3.org/2000/svg">` +
             `<path d="m11.523 6.3495a5.1729 5.1729 0 0 1-4.6424 5.1456 5.1729 5.1729 0 0 1-5.5946-4.0902 5.1729 5.1729 0 0 1 3.4949-5.9846 5.1729 5.1729 0 0 1 6.3114 2.8627"/>` +
             `<path d="m11.135 4.2444v-3.2485"/>` +
             `<path d="m7.8717 4.279h3.2485"/>` +
@@ -557,7 +557,7 @@ window.onload = () => {
     Array.from(elems).forEach((e) => {
         let cls = e.disabled ? "disabled" : "";
         e.innerHTML =
-            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">` +
+            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" fill="none" xmlns="http://www.w3.org/2000/svg">` +
             `<path d="m5.7692 0.82424a5.5562 5.5562 0 0 1 1.1616-3e-8"/>` +
             `<path d="m5.7692 0.82424a5.5562 5.5562 0 0 1 1.1616-3e-8"/>` +
             `<path transform="rotate(45)" d="m8.3998-5.5268a5.5562 5.5562 0 0 1 1.1616 0"/>` +
@@ -599,7 +599,7 @@ window.onload = () => {
     Array.from(elems).forEach((e) => {
         let cls = e.disabled ? "disabled" : "";
         e.innerHTML =
-            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" xmlns="http://www.w3.org/2000/svg">` +
+            `<svg class="${cls}" version="1.1" viewBox="0 0 12.7 12.7" fill="none" xmlns="http://www.w3.org/2000/svg">` +
             `<path d="m6.35 0.78115v9.8148"/>` +
             `<path d="m2.6458 11.906h7.4083"/>` +
             `<path d="m6.35 10.686 3.175-3.0132"/>` +
@@ -642,7 +642,17 @@ window.onload = () => {
         hide_all_context_menus();
     }
 
-    document.addEventListener("click", on_document_click);
+    document.addEventListener(
+        "click",
+        () => {
+            hide_all_context_menus();
+        });
+
+    document.addEventListener(
+        "scroll",
+        () => {
+            hide_all_context_menus();
+        });
 
     function show_context_menu(menu_elem, event) {
         hide_all_context_menus();
@@ -834,12 +844,6 @@ window.onload = () => {
                 });
         }
     }
-
-    de("wb_subpanel").addEventListener(
-        "scroll",
-        (event) => {
-            hide_wb_context_menu();
-        });
     // Workbook panel end
 
     // Worksheet context menu
@@ -1047,13 +1051,6 @@ window.onload = () => {
         "click",
         (event) => {
             handleWsContextPaste(event);
-        });
-
-    de("ws_subpanel").addEventListener(
-        "scroll",
-        (event) => {
-            hide_ws_context_menu();
-            hide_ws_panel_context_menu();
         });
 
     de("ws_panel_context_paste").addEventListener(
@@ -1575,13 +1572,6 @@ window.onload = () => {
             handleWsTxnContextPaste(event);
         });
 
-    de("ws_txn_subpanel").addEventListener(
-        "scroll",
-        (event) => {
-            hide_txn_context_menu();
-            hide_txn_panel_context_menu();
-        });
-
     de("txn_panel_context_paste").addEventListener(
         "click",
         () => {
@@ -1859,12 +1849,6 @@ window.onload = () => {
             let acc_name = state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.NAME];
             hide_acc_context_menu();
             show_new_account(acc_id, acc_name, constants.ACTION.EDIT);
-        });
-
-    de("acc_subpanel").addEventListener(
-        "scroll",
-        (event) => {
-            hide_acc_context_menu();
         });
     // Account context menu END
 

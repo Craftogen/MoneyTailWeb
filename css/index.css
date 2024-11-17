@@ -36,14 +36,23 @@ body {
     font-size: 14px;
     margin: 0px;
     padding: 0px;
+
     /* Padding to avoid the "unsafe" areas behind notches in the screen */
-    /* bottom is 0 otherwise iPhone shows extra space */
-    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+
     width:100%;
     overscroll-behavior: none;
     display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+    /* This is needed to keep android PWA to hide the address bar when scrolling */
     position: fixed;
-    height: 100%;
+
+    /* overflow should always be on the body otherwise fixed position elements
+       like floating buttons or menu will start overlapping scrollbars */
+    overflow: auto;
+
 }
 
 /* Portrait layout (default) */
@@ -51,7 +60,8 @@ body {
     padding: 0px 0px;
     margin: 0px;
     display: flex;
-    flex-grow: 1;
+    flex-direction: column;
+    height: 100%;
 }
 
 /* Landscape layout (with min-width) */
@@ -60,6 +70,7 @@ body {
         padding:0px 0px 0px 0px;  /* padding-top + padding-bottom + text area = image height */
         margin:0px 0px 0px 0px;  /* offset vertical: half of image height */
                                       /* offset horizontal: half of image width and text area width */
+        border: 1px solid blue;
     }
 }
 
@@ -113,11 +124,6 @@ td.head {
 
 td.squeeze {
     width: 1px;
-}
-
-td.label {
-    padding: 0px 8px 0px 8px;
-    width: 7em;
 }
 
 td.label {
@@ -402,14 +408,8 @@ span.tag {
 div.page {
     display: flex;
     flex-grow: 1;
-    background-color: #f2f2f2;
-}
-
-div.pageContent {
-    display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    overflow-y: auto;
+    background-color: #f2f2f2;
 }
 
 div.tabs_panel {
@@ -420,6 +420,7 @@ div.tabs_panel {
 
 div.tabs_subpanel {
     height: 100%;
+    flex-direction: column;
 }
 
 @media screen and (prefers-color-scheme: dark) {

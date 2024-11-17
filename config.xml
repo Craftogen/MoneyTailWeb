@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.craftogen.moneytail" version="1.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>MoneyTail</name>
+    <description>Double-entry personal workbook</description>
+    <author email="craftogen@gmail.com" href="https://cordova.apache.org">
+        Craftogen
+    </author>
+    <content src="index.html" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <preference name="android-targetSdkVersion" value="34" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/android/res/mipmap-xxxhdpi/ic_launcher_monochrome.png" />
+    <preference name="AndroidWindowSplashScreenBackground" value="#666666" />
+    <preference name="AndroidPostSplashScreenTheme" value="@style/Theme.AppCompat.DayNight.NoActionBar" />
+</widget>

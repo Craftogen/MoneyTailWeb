@@ -1,0 +1,28 @@
+CACHE MANIFEST
+# Cache manifest revision 0
+
+CACHE:
+cache.manifest
+favicon.ico
+index.html
+manifest.json
+css\index.css
+img\apple-touch-icon.png
+img\icon-192-maskable.png
+img\icon-192.png
+img\icon-512-maskable.png
+img\icon-512.png
+js\app_storage.js
+js\common.js
+js\constants.js
+js\index.js
+js\main_worker.js
+js\tabs.js
+wasm\main.js
+wasm\main_bg.wasm
+ 
+NETWORK:
+https://craftogen.github.io/MoneyTailWeb/
+ 
+FALLBACK:
+/ offline.html
