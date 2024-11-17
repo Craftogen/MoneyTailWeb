@@ -47,7 +47,7 @@ body {
     height: 100vh;
 
     /* This is needed to keep android PWA to hide the address bar when scrolling */
-    position: fixed;
+    /* position: fixed; */
 
     /* overflow should always be on the body otherwise fixed position elements
        like floating buttons or menu will start overlapping scrollbars */
