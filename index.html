@@ -38,7 +38,7 @@
         <link rel="icon" href="favicon.ico" sizes="any">
         <link rel="apple-touch-icon" href="./img/apple-touch-icon.png">
         <meta name="mobile-web-app-capable" content="yes"></meta>
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <title>Money Tail</title>
     </head>
     <body>
@@ -46,9 +46,10 @@
             <div id="tabs_page" class="page">
                 <div id="ws_panel" class="tabs_panel">
                     <div id="wb_subpanel" class="tabs_subpanel">
-                        <table class="topBar"><tr>
-                            <td class="topBarItem topBarLarge">Workbooks</td>
-                        </tr></table>
+                        <table class="topBar">
+                            <tr><td class="topBarInset"></td></tr>
+                            <tr><td class="topBarItem topBarLarge">Workbooks</td></tr>
+                        </table>
                         <table class="main">
                             <thead class="main" id="wb_list_head">
                                 <tr class="main">
@@ -75,6 +76,7 @@
                     </div>
                     <div id="ws_subpanel" class="tabs_subpanel inactive">
                         <table class="topBar">
+                            <tr><td class="topBarInset" colspan="2"></td></tr>
                             <tr>
                                 <td class="topBarItem back" rowspan="2">
                                     <button class="topBarItem icon back_svg" id="ws_back"></button>
@@ -111,6 +113,7 @@
                     </div>
                     <div id="ws_txn_subpanel" class="tabs_subpanel inactive">
                         <table class="topBar">
+                            <tr><td class="topBarInset" colspan="2"></td></tr>
                             <tr>
                                 <td class="topBarItem back" rowspan="2">
                                     <button class="topBarItem icon back_svg" id="ws_txn_back"></button>
@@ -159,9 +162,10 @@
                 </div>
                 <div id="acc_panel" class="tabs_panel inactive">
                     <div id="acc_subpanel" class="tabs_subpanel">
-                        <table class="topBar"><tr>
-                            <td class="topBarItem topBarLarge">Accounts</td>
-                        </tr></table>
+                        <table class="topBar">
+                            <tr><td class="topBarInset"></td></tr>
+                            <tr><td class="topBarItem topBarLarge">Accounts</td></tr>
+                        </table>
                         <table class="main">
                             <thead class="main" id="acc_list_head">
                                 <tr class="main">
@@ -187,9 +191,10 @@
                     </div>
                 </div>
                 <div id="reports_panel" class="tabs_panel inactive">
-                    <table class="topBar"><tr>
-                        <td class="topBarItem topBarLarge">Reports</td>
-                    </tr></table>
+                    <table class="topBar">
+                        <tr><td class="topBarInset"></td></tr>
+                        <tr><td class="topBarItem topBarLarge">Reports</td></tr>
+                    </table>
                     <table class="main">
                         <tr class="content_height">
                             <td class="main">
@@ -216,23 +221,29 @@
                         <iframe class="main" id="report_content"></iframe>
                     </div>
                 </div>
-                <table class="bottomBar"><tr>
-                    <td class="bottomBarItem active" id="ws_tab">Workbooks</td>
-                    <td class="bottomBarItem" id="acc_tab">Accounts</td>
-                    <td class="bottomBarItem" id="reports_tab">Reports</td>
-                    <td class="bottomBarItem" id="more_menu">More...</td>
-                </tr></table>
+                <table class="bottomBar">
+                    <tr>
+                        <td class="bottomBarItem active" id="ws_tab">Workbooks</td>
+                        <td class="bottomBarItem" id="acc_tab">Accounts</td>
+                        <td class="bottomBarItem" id="reports_tab">Reports</td>
+                        <td class="bottomBarItem" id="more_menu">More...</td>
+                    </tr>
+                    <tr><td class="bottomBarInset" colspan="4"></td></tr>
+                </table>
             </div>
             <div id="new_wb_page" class="page inactive">
-                <table class="topBar"><tr>
-                    <td class="topBarItem back">
-                        <button class="topBarItem icon back_svg" id="new_wb_back"></button>
-                    </td>
-                    <td class="topBarItem" id="new_wb_title">New Workbook</td>
-                    <td class="topBarItem right_most">
-                        <button class="topBarItem icon tick_svg" id="new_wb_save" disabled></button>
-                    </td>
-                </tr></table>
+                <table class="topBar">
+                    <tr><td class="topBarInset" colspan="3"></td></tr>
+                    <tr>
+                        <td class="topBarItem back">
+                            <button class="topBarItem icon back_svg" id="new_wb_back"></button>
+                        </td>
+                        <td class="topBarItem" id="new_wb_title">New Workbook</td>
+                        <td class="topBarItem right_most">
+                            <button class="topBarItem icon tick_svg" id="new_wb_save" disabled></button>
+                        </td>
+                    </tr>
+                </table>
                 <table class="main">
                     <tr><td class="main_label">Name:</td></tr>
                     <tr><td class="main"><input type="text" id="wb_name" maxlength="64" /></td></tr>
@@ -240,6 +251,7 @@
             </div>
             <div id="new_ws_page" class="page inactive">
                 <table class="topBar">
+                    <tr><td class="topBarInset" colspan="3"></td></tr>
                     <tr>
                         <td class="topBarItem back" rowspan="2">
                             <button class="topBarItem icon back_svg" id="new_ws_back"></button>
@@ -259,15 +271,18 @@
                 </table>
             </div>
             <div id="new_acc_page" class="page inactive">
-                <table class="topBar"><tr>
-                    <td class="topBarItem back">
-                        <button class="topBarItem icon back_svg" id="new_acc_back"></button>
-                    </td>
-                    <td class="topBarItem" id="new_acc_title">New Account</td>
-                    <td class="topBarItem right_most">
-                        <button class="topBarItem icon tick_svg" id="new_acc_save" disabled></button>
-                    </td>
-                </tr></table>
+                <table class="topBar">
+                    <tr><td class="topBarInset" colspan="3"></td></tr>
+                    <tr>
+                        <td class="topBarItem back">
+                            <button class="topBarItem icon back_svg" id="new_acc_back"></button>
+                        </td>
+                        <td class="topBarItem" id="new_acc_title">New Account</td>
+                        <td class="topBarItem right_most">
+                            <button class="topBarItem icon tick_svg" id="new_acc_save" disabled></button>
+                        </td>
+                    </tr>
+                </table>
                 <table class="main">
                     <tr><td class="main_label">Name:</td></tr>
                     <tr><td class="main"><input type="text" id="acc_name" maxlength="64" /></td></tr>
@@ -275,6 +290,7 @@
             </div>
             <div id="new_ws_txn_page" class="page inactive">
                 <table class="topBar">
+                    <tr><td class="topBarInset" colspan="3"></td></tr>
                     <tr>
                         <td class="topBarItem back" rowspan="2">
                             <button class="topBarItem icon back_svg" id="new_ws_txn_back"></button>
@@ -319,6 +335,7 @@
             </div>
             <div id="new_sec_page" class="page inactive">
                 <table class="topBar">
+                    <tr><td class="topBarInset" colspan="3"></td></tr>
                     <tr>
                         <td class="topBarItem back" rowspan="2">
                             <button class="topBarItem icon back_svg" id="new_sec_back"></button>
@@ -339,6 +356,7 @@
             </div>
             <div id="settle_report_settings_page" class="page inactive">
                 <table class="topBar">
+                    <tr><td class="topBarInset" colspan="4"></td></tr>
                     <tr>
                         <td class="topBarItem back" rowspan="2">
                             <button class="topBarItem icon back_svg" id="settle_report_settings_back"></button>
@@ -361,6 +379,7 @@
             </div>
             <div id="ac_txn_report_settings_page" class="page inactive">
                 <table class="topBar">
+                    <tr><td class="topBarInset" colspan="4"></td></tr>
                     <tr>
                         <td class="topBarItem back" rowspan="2">
                             <button class="topBarItem icon back_svg" id="ac_txn_report_settings_back"></button>
@@ -417,7 +436,7 @@
             <div class="contextMenu hidden" id="txn_panel_context_menu">
                 <div class="contextMenuItem" id="txn_panel_context_paste">Paste</div>
             </div>
-            <div class="contextMenu hidden" id="more_context_menu">
+            <div class="moreContextMenu hidden" id="more_context_menu">
                 <div class="contextMenuItem" id="more_context_import">Import...</div>
                 <div class="contextMenuItem" id="more_context_export">Export...</div>
             </div>

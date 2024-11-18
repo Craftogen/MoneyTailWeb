@@ -638,10 +638,6 @@ window.onload = () => {
         hide_more_context_menu();
     }
 
-    function on_document_click() {
-        hide_all_context_menus();
-    }
-
     document.addEventListener(
         "click",
         () => {
@@ -679,15 +675,6 @@ window.onload = () => {
 
     function toggle_more_context_menu(menu_elem) {
         if (menu_elem.classList.contains("hidden")) {
-            let bottomBar = document.getElementsByClassName("bottomBar")[0];
-
-            let x = document.documentElement.clientWidth - menu_elem.clientWidth - 4;
-            let y = document.documentElement.clientHeight -
-                menu_elem.clientHeight - bottomBar.clientHeight - 4;
-
-            menu_elem.style.left = `${x}px`;
-            menu_elem.style.top = `${y}px`;
-
             menu_elem.classList.remove("hidden");
         } else {
             hide_more_context_menu();
