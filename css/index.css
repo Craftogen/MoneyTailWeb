@@ -40,6 +40,7 @@ body {
     height: 100vh;
     padding-left: env(safe-area-inset-left, 0px);
     padding-right: env(safe-area-inset-right, 0px);
+    overscroll-behavior: none;
 }
 
 /* Portrait layout (default) */
@@ -133,7 +134,7 @@ table.bottomBar {
     background-color: white;
     border-collapse: collapse;
     position: sticky;
-    bottom: 0px; /*env(safe-area-inset-bottom, 0px);*/
+    bottom: 0px;
     height: calc(50px + env(safe-area-inset-bottom, 0px));
 }
 
@@ -167,6 +168,10 @@ div.inactive {
 
 div.hidden {
     visibility: hidden;
+}
+
+div.listEndSpace {
+    height: 64px;
 }
 
 td.bottomBarItem {
