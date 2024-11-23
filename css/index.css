@@ -160,6 +160,7 @@ div.moreContextMenu {
     border-radius: 4px;
     padding: 4px;
     background-color: white;
+    border-right: 0px;
 }
 
 div.inactive {

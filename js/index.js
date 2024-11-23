@@ -650,6 +650,12 @@ window.onload = () => {
             hide_all_context_menus();
         });
 
+    document.addEventListener(
+        "contextmenu",
+        (event) => {
+            event.preventDefault();
+        });
+
     function show_context_menu(menu_elem, event) {
         hide_all_context_menus();
 
@@ -1867,6 +1873,21 @@ window.onload = () => {
             show_new_account(null, null, constants.ACTION.NEW);
         });
 
+    function handleAccContextMenu(event) {
+        event.preventDefault();
+
+        let row = event.target.parentElement;
+        let menu = de("acc_context_menu");
+        state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.UNIFIED_ID] =
+            row.id;
+        state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.NAME] =
+            row.cells[0].innerText;
+
+        show_context_menu(menu, event);
+
+        event.stopPropagation();
+    }
+
     function populate_acc_list(data) {
         let data_obj = JSON.parse(data);
         new_ws_txn_clear_acc_select();
@@ -1877,6 +1898,7 @@ window.onload = () => {
             tableHTML += `<tr id="${data_obj[i][0]}" class="main">`
             tableHTML += `<td class="main">${data_obj[i][1]}</td>`;
             tableHTML += `<td class="main amount">${amt_disp}</td>`
+            tableHTML += `<td class="main contextMenu">&#x2807</td>`;
             tableHTML += `</tr>`;
 
             new_ws_txn_add_acc_select(data_obj[i][0], data_obj[i][1]);
@@ -1885,18 +1907,23 @@ window.onload = () => {
 
         for (let i = 0; i < data_obj.length; i++) {
             let acc_row = de(data_obj[i][0]);
-            acc_row.addEventListener(
+
+            acc_row.cells[0].addEventListener(
                 "contextmenu",
                 (event)  => {
-                    event.preventDefault();
+                    handleAccContextMenu(event);
+                });
 
-                    let row = event.target.parentElement;
-                    let menu = de("acc_context_menu");
-                    state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.UNIFIED_ID] =
-                        row.id;
-                    state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.NAME] =
-                        row.cells[0].innerText;
-                    show_context_menu(menu, event);
+            acc_row.cells[1].addEventListener(
+                "contextmenu",
+                (event)  => {
+                    handleAccContextMenu(event);
+                });
+
+            acc_row.cells[2].addEventListener(
+                "click",
+                (event)  => {
+                    handleAccContextMenu(event);
                 });
         }
     }
