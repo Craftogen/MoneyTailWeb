@@ -37,6 +37,16 @@ function update_worksheet_transactions(obj, unified_ws_id, prefs) {
     }
 }
 
+function update_worksheet_transactions_inline(obj, unified_t_id, prefs) {
+    let ws_txn_prefs = prefs[constants.PREF_SECTIONS.WS_TXNS];
+    let data = moneyTail.get_worksheet_transactions(
+        unified_t_id,
+        ws_txn_prefs[constants.PREF_PROPERTY.SORT_BY],
+        ws_txn_prefs[constants.PREF_PROPERTY.SORT_TYPE],
+        `["${unified_t_id}"]`);
+    obj.postMessage([constants.MSG_WS_UPDATE_TRANSACTIONS, data]);
+}
+
 function update_accounts(obj, prefs) {
     let ac_prefs = prefs[constants.PREF_SECTIONS.ACCOUNTS];
     obj.postMessage([
@@ -411,7 +421,8 @@ onmessage = function(e) {
                     e.data[5],          // to_account
                     e.data[6]);         // amount
                 save_worksheet(this, unified_t_id);
-                update_worksheet_transactions(this, unified_t_id, prefs);
+                update_worksheet_transactions_inline(
+                    this, unified_t_id, prefs);
                 this.postMessage([constants.MSG_EDIT_TRANSACTION]);
             } catch (err_str) {
                 this.postMessage([constants.MSG_ERROR, err_str]);

@@ -80,17 +80,20 @@ state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.UNIFIED_ID] = null;
 state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.NAME] = null;
 state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.ACTION] = null;
 state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.DIRTY] = ENTRY_FLAG.NONE;
+state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.SCROLL_Y] = 0;
 state[UI_SECTION.ACCOUNTS] = {};
 state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.UNIFIED_ID] = null;
 state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.NAME] = null;
 state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.ACTION] = null;
 state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.DIRTY] = ENTRY_FLAG.NONE;
+state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.SCROLL_Y] = 0;
 state[UI_SECTION.REPORTS] = {};
 state[UI_SECTION.REPORTS][UI_SECTION_PROPERTY.TYPE] = null;
 state[UI_SECTION.TRANSACTIONS] = {};
 state[UI_SECTION.TRANSACTIONS][UI_SECTION_PROPERTY.LAST_SELECTED] = null;
 state[UI_SECTION.GLOBAL] = {};
 state[UI_SECTION.GLOBAL][UI_SECTION_PROPERTY.PASTE] = null;
+state[UI_SECTION.GLOBAL][UI_SECTION_PROPERTY.TABS_PAGE_SCROLL_Y] = 0;
 
 function setFlag(state, flag) {
     state |= flag;
@@ -244,8 +247,25 @@ function select_save_file(appStorageType, content, successMsg, failMsg) {
 }
 
 function make_active(active_id, inactive_id) {
+    let scrollToY = 0;
+    switch (active_id) {
+        case "tabs_page":
+            scrollToY = state[UI_SECTION.GLOBAL][UI_SECTION_PROPERTY.TABS_PAGE_SCROLL_Y];
+            break;
+    }
+
+    switch (inactive_id) {
+        case "tabs_page":
+            state[UI_SECTION.GLOBAL][UI_SECTION_PROPERTY.TABS_PAGE_SCROLL_Y] = window.scrollY;
+            break;
+    }
+
     if (active_id) {
         de(active_id).classList.remove("inactive");
+
+        if (scrollToY > 0) {
+            window.scrollTo(0, scrollToY);
+        }
     }
 
     if (inactive_id) {
@@ -424,11 +444,27 @@ function load_workbooks() {
         })
 }
 
+function onBeforeHideWorkbooksPanel(event) {
+    state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.SCROLL_Y] = window.scrollY;
+}
+
+function onAfterShowWorkbooksPanel(event) {
+    window.scrollTo(0, state[UI_SECTION.WORKBOOKS][UI_SECTION_PROPERTY.SCROLL_Y]);
+}
+
 function onBeforeShowAccountsPanel(event) {
     if (testAccountsFlag(ENTRY_FLAG.ACCOUNTS)) {
         mainWorker.postMessage([constants.MSG_ACCOUNTS, prefs]);
         clearAccountsFlags([ENTRY_FLAG.ACCOUNTS]);
     }
+}
+
+function onBeforeHideAccountsPanel(event) {
+    state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.SCROLL_Y] = window.scrollY;
+}
+
+function onAfterShowAccountsPanel(event) {
+    window.scrollTo(0, state[UI_SECTION.ACCOUNTS][UI_SECTION_PROPERTY.SCROLL_Y]);
 }
 
 function populate_exclude_wbs(multi_sel_obj, id_prefix, wbs_json, exclude_wbs_ids) {
@@ -518,9 +554,17 @@ window.onload = () => {
     'use strict';
 
     const mainTabs = new Tabs();
-    mainTabs.addTab("ws_tab", "ws_panel");
-    mainTabs.addTab("acc_tab", "acc_panel", onBeforeShowAccountsPanel);
-    mainTabs.addTab("reports_tab", "reports_panel", onBeforeShowReportsPanel);
+    mainTabs.addTab(
+        "ws_tab", "ws_panel",
+        null, onAfterShowWorkbooksPanel,
+        onBeforeHideWorkbooksPanel, null);
+    mainTabs.addTab(
+        "acc_tab", "acc_panel",
+        onBeforeShowAccountsPanel, onAfterShowAccountsPanel,
+        onBeforeHideAccountsPanel, null);
+    mainTabs.addTab(
+        "reports_tab", "reports_panel",
+        onBeforeShowReportsPanel, null, null, null);
 
     let elems = document.getElementsByClassName("back_svg");
     Array.from(elems).forEach((e) => {
@@ -1544,6 +1588,34 @@ window.onload = () => {
         }
     }
 
+    function update_ws_txn_list(data) {
+        let data_obj = JSON.parse(data);
+        let section_obj = data_obj["sections"];
+        let pending_amt = fmt_amt(data_obj["balance"]);
+
+        de("ws_txn_pending").textContent = pending_amt;
+
+        for (let section_i = 0; section_i < section_obj.length; section_i++) {
+            let sec_id = section_obj[section_i][0];
+            let sec_name = section_obj[section_i][1];
+            let sec_total = fmt_amt(section_obj[section_i][2]);
+
+            let sec_row = de(sec_id);
+            sec_row.cells[0].textContent = sec_name;
+            sec_row.cells[1].textContent = sec_total;
+
+            for (let i = 0; i < section_obj[section_i][3].length; i++) {
+                let txn_obj = section_obj[section_i][3][i];
+
+                let ws_txn_row = de(txn_obj[0]);
+                ws_txn_row.cells[0].textContent = txn_obj[1];
+                ws_txn_row.cells[1].textContent = txn_obj[2];
+                ws_txn_row.cells[2].textContent = `${txn_obj[3]} to ${txn_obj[4]}`;
+                ws_txn_row.cells[3].textContent = fmt_amt(txn_obj[5]);
+            }
+        }
+    }
+
     function handleWsTxnContextPaste(event) {
         event.preventDefault();
         enableContextMenuItem(
@@ -2253,6 +2325,10 @@ window.onload = () => {
                 populate_ws_txn_list(e.data[1]);
                 break;
 
+            case constants.MSG_WS_UPDATE_TRANSACTIONS:
+                update_ws_txn_list(e.data[1]);
+                break;
+
             case constants.MSG_NEW_TRANSACTION:
             case constants.MSG_EDIT_TRANSACTION:
             case constants.MSG_MOVE_TRANSACTION:
@@ -2398,15 +2474,10 @@ window.onload = () => {
             } else if (!de("ac_txn_report_settings_page").classList.contains("inactive")) {
                 onAcTxnReportSettingsBackClick();
             } else {
-                navigator.notification.confirm(
-                    "Are you sure you want to exit?",
-                    (buttonIndex) => {
-                        if (buttonIndex == 1) {
-                            navigator.app.exitApp();
-                        }
-                    },
-                    "Exit",
-                    ["Exit", "Cancel"]);
+                /* Do not ask for confirmation - just exit.
+                   Android users are expected to use the back button to eventually return
+                   to the home screen. A confirmation dialog frustrates some of them. */
+                navigator.app.exitApp();
             }
         },
         false);

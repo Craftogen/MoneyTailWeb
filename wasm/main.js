@@ -127,6 +127,10 @@ function getFloat64Memory0() {
     return cachedFloat64Memory0;
 }
 
+function isLikeNone(x) {
+    return x === undefined || x === null;
+}
+
 function handleError(f, args) {
     try {
         return f.apply(this, args);
@@ -1024,24 +1028,27 @@ export class MoneyTail {
     * @param {string} unified_worksheet_id
     * @param {SortBy} sort_by
     * @param {SortType} sort_type
+    * @param {string | undefined} [include_unified_txn_ids_json]
     * @returns {string}
     */
-    get_worksheet_transactions(unified_worksheet_id, sort_by, sort_type) {
-        let deferred2_0;
-        let deferred2_1;
+    get_worksheet_transactions(unified_worksheet_id, sort_by, sort_type, include_unified_txn_ids_json) {
+        let deferred3_0;
+        let deferred3_1;
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
             const ptr0 = passStringToWasm0(unified_worksheet_id, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
             const len0 = WASM_VECTOR_LEN;
-            wasm.moneytail_get_worksheet_transactions(retptr, this.__wbg_ptr, ptr0, len0, sort_by, sort_type);
+            var ptr1 = isLikeNone(include_unified_txn_ids_json) ? 0 : passStringToWasm0(include_unified_txn_ids_json, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+            var len1 = WASM_VECTOR_LEN;
+            wasm.moneytail_get_worksheet_transactions(retptr, this.__wbg_ptr, ptr0, len0, sort_by, sort_type, ptr1, len1);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
-            deferred2_0 = r0;
-            deferred2_1 = r1;
+            deferred3_0 = r0;
+            deferred3_1 = r1;
             return getStringFromWasm0(r0, r1);
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
-            wasm.__wbindgen_free(deferred2_0, deferred2_1, 1);
+            wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
         }
     }
     /**
